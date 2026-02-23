@@ -1,0 +1,11 @@
+# Environment variables
+.env
+.envrc
+.env.local
+.env.*.local
+.env.*
+!.env.example
+!**/.env.example
+
+# TODO files
+todo/
