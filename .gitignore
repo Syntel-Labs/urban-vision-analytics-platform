@@ -1,4 +1,6 @@
+# --------------------
 # Environment variables
+# --------------------
 .env
 .envrc
 .env.local
@@ -7,5 +9,59 @@
 !.env.example
 !**/.env.example
 
-# TODO files
+# --------------------
+# Logs
+# --------------------
+logs/
+*.log
+
+# --------------------
+# Python
+# --------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+venv/
+.venv/
+
+# --------------------
+# Node / pnpm
+# --------------------
+node_modules/
+.pnpm-store/
+dist/
+build/
+
+# --------------------
+# OS
+# --------------------
+.DS_Store
+Thumbs.db
+
+# --------------------
+# IDE
+# --------------------
+.vscode/
+.idea/
+
+# --------------------
+# Temporary
+# --------------------
+tmp/
+temp/
+
+# --------------------
+# Local planning files
+# --------------------
 todo/
+
+# Markdown linter
+.markdownlint.json
