@@ -1,0 +1,30 @@
+@startuml ContextDiagram
+title C4 - Context Diagram (v1)
+
+actor "Usuario" as user
+actor "Administrador/Dev" as dev
+
+rectangle "Urban Vision Analytics\n(UVA)" as UVA
+
+rectangle "Fuente de Video\n(RTSP / Webcam / Archivo)" as VIDEO
+rectangle "Cámara Pública / Stream" as CAM
+rectangle "Sistema Operativo / GPU Driver" as GPU
+rectangle "Navegador Web" as BROWSER
+
+user --> BROWSER : Usa dashboard
+BROWSER --> UVA : Consume UI + WebSocket
+
+dev --> UVA : Despliega / configura
+dev --> UVA : Observa logs / métricas
+
+CAM --> VIDEO : Provee stream
+VIDEO --> UVA : Entrega frames (ingesta)
+
+UVA --> GPU : Usa aceleración (opcional)
+
+note right of UVA
+Producto: analítica en tiempo real basada en detección y tracking.
+No incluye reconocimiento facial ni almacenamiento de video.
+end note
+
+@enduml

@@ -1,0 +1,31 @@
+@startuml SequenceFrameIngest
+title Sequence - Frame Ingest & Processing (v1)
+
+actor "Usuario" as U
+participant "Frontend" as FE
+participant "Backend API" as BE
+participant "Vision Engine" as VE
+participant "Redis Streams" as RS
+database "PostgreSQL" as DB
+
+U -> FE : Inicia sesión (UI)
+FE -> BE : POST /api/v1/sessions\n(source, mode)
+BE -> DB : Crear Session
+BE --> FE : session_id
+
+loop Por frame / intervalo
+    VE -> VE : Captura frame
+    VE -> VE : Inferencia + tracking
+    VE -> RS : XADD vision.detections.v1\nDetectionEvent
+    BE -> RS : XREADGROUP\nDetectionEvent
+    BE -> BE : Validar + agregar métricas
+    BE -> DB : Persistir (intervalo / resumen parcial)
+    BE --> FE : WebSocket live_metrics\n+ boxes + estado
+end
+
+U -> FE : Finaliza sesión
+FE -> BE : POST /api/v1/sessions/{id}/stop
+BE -> DB : Cerrar Session + resumen
+BE --> FE : Confirmación
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml DataflowStreams
+title Dataflow - Streams (v1)
+
+rectangle "Fuente de Video\n(RTSP/Webcam/Archivo)" as SRC
+rectangle "Vision Engine" as VE
+rectangle "Redis Stream\nvision.detections.v1" as RS
+rectangle "Backend API" as BE
+database "PostgreSQL" as DB
+rectangle "Frontend Dashboard" as FE
+
+SRC --> VE : Frame (raw)
+
+VE --> VE : Preprocesamiento
+VE --> VE : Detección
+VE --> VE : Tracking
+
+VE --> RS : DetectionEvent (JSON)\nframe_detections
+
+RS --> BE : Consumir eventos
+
+BE --> BE : Validación de contrato
+BE --> BE : Agregación de métricas\n(conteo/flujo/densidad)
+BE --> DB : Persistir métricas agregadas\n+ sesión
+
+BE --> FE : WebSocket\nmétricas + boxes + estado
+
+note right of RS
+No se envían imágenes.
+Solo metadatos estructurados.
+end note
+
+@enduml

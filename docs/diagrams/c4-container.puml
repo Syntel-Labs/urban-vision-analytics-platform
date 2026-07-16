@@ -1,0 +1,39 @@
+@startuml ContainerDiagram
+title C4 - Container Diagram (v1)
+
+actor "Usuario" as user
+actor "Administrador/Dev" as dev
+
+rectangle "Fuente de Video\n(RTSP / Webcam / Archivo)" as video
+
+rectangle "Frontend Dashboard\n(React + Vite)" as fe
+rectangle "Backend API\n(FastAPI + WebSocket)" as be
+rectangle "Vision Engine\n(Python + YOLO + Tracking)" as ve
+rectangle "Redis Streams" as redis
+rectangle "PostgreSQL" as db
+
+user --> fe : Interactúa / visualiza
+fe --> be : REST / WebSocket
+
+dev --> be : Configura / monitorea
+dev --> ve : Configura / monitorea
+
+video --> ve : Frames
+
+ve --> redis : Publica eventos\n(detecciones/tracking)
+be --> redis : Consume eventos\n(agregación)
+
+be --> db : Persiste métricas\n(sesiones/históricos)
+be --> fe : Push real-time\n(métricas + boxes)
+
+note right of redis
+Mensajería para desacoplar
+procesamiento y consumo.
+end note
+
+note right of db
+Persistencia de métricas agregadas.
+No se almacenan frames ni video.
+end note
+
+@enduml
